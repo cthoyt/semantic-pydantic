@@ -1,6 +1,7 @@
 from textwrap import dedent
 
 import bioregistry
+from bioregistry.constants import PYDANTIC_1
 
 __all__ = [
     "SemanticField",
@@ -37,8 +38,12 @@ def _create(cls, *args, prefix: str, **kwargs):
         kwargs["title"] = record.get_name()
     if "description" not in kwargs:
         kwargs["description"] = _get_description(record)
-    if "regex" not in kwargs:
-        kwargs["regex"] = record.get_pattern()
+    if PYDANTIC_1:
+        if "regex" not in kwargs:
+            kwargs["regex"] = record.get_pattern()
+    else:
+        if "pattern" not in kwargs:
+            kwargs["pattern"] = record.get_pattern()
     jse = kwargs.setdefault("json_schema_extra", {})
     jse["bioregistry"] = {
         "prefix": record.prefix,
