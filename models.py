@@ -32,7 +32,7 @@ def _get_description(record: bioregistry.Resource) -> str:
 def _create(cls, *args, prefix: str, **kwargs):
     record = bioregistry.get_resource(prefix)
     if record is None:
-        raise ValueError
+        raise ValueError(f"Unregistered prefix: {prefix}")
     if "title" not in kwargs:
         kwargs["title"] = record.get_name()
     if "description" not in kwargs:

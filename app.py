@@ -1,9 +1,9 @@
 import requests
 from fastapi import FastAPI
+from fastapi.responses import RedirectResponse
 from pydantic import BaseModel, Field
 
 from models import SemanticField, SemanticPath
-from fastapi.responses import RedirectResponse
 
 
 class Scholar(BaseModel):
@@ -21,12 +21,12 @@ class Scholar(BaseModel):
     authorea: str | None = SemanticField(default=None, prefix="authorea.author")
 
 
-app = FastAPI()
+app = FastAPI(title="Semantic Pydantic Demo")
 
 
 @app.get("/api/orcid/{orcid}", response_model=Scholar)
 def get_orcid(orcid: str = SemanticPath(prefix="orcid")):
-    """Get a person from their ORCID identifier."""
+    """Get xrefs for a researcher in Wikidata, given ORCID identifier."""
     res = requests.get(
         "https://query.wikidata.org/sparql",
         params={"query": SPARQL_FORMAT % orcid, "format": "json"},
