@@ -1,6 +1,6 @@
-import bioregistry
-
 from textwrap import dedent
+
+import bioregistry
 
 __all__ = [
     "SemanticField",
@@ -18,12 +18,13 @@ def _get_description(record: bioregistry.Resource) -> str:
         The semantics of this field are derived from the
         <a href="https://bioregistry.io/{record.prefix}"><code>{record.prefix}</code></a> entry in
         the <a href="https://bioregistry.io">Bioregistry</a>: a registry of semantic web and linked 
-        open data compact URI (CURIE) prefixes and URI prefixes.
+        open data compact URI (CURIE) prefixes and URI prefixes. A real example of a local unique identifier
+        from this semantic space is {record.get_example()}.
     </p>
 
     <h4>Description of Semantic Space</h4>
 
-    {record.get_description()}
+    {record.get_description()}.
     """
     )
 
@@ -43,9 +44,9 @@ def _create(cls, *args, prefix: str, **kwargs):
         "prefix": record.prefix,
         "mappings": record.mappings,
     }
-    example = record.get_example()
-    if example:
-        jse["examples"] = [example]
+    examples = record.get_examples()
+    if examples:
+        jse["examples"] = examples
     return cls(*args, **kwargs)
 
 
