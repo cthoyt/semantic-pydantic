@@ -1,25 +1,27 @@
-# Semantic PyDantic
+# Semantic Pydantic
 
-Goals:
+> Annotate your data models in Pydantic and APIs in FastAPI with the Bioregistry to make them more FAIR
 
-1. Annotate data models to make them more FAIR
-2. Annotate APIs to make them more FAIR
+Using [Pydantic](https://docs.pydantic.dev) for encoding data models and [FastAPI](https://fastapi.tiangolo.com)
+for implementing APIs on top of them has become a staple for many Python programmers. When this intersects
+with the semantic web, linked open data, and the natural sciences, we are still lacking a bridge to annotate
+our data models and APIs to make them more FAIR (findable, accessible, interoperable, and reusable).
 
-Methods:
+Specifically, many data models reference entities from _semantic spaces_ using _local unique identifiers_.
+For backend developers, an example semantic space might be a table in a database and the local unique identifiers
+are the values for the primary key column. Most primary keys are integers or UUIDs, but they are not limited to these.
+The concept of the semantic space and local unique identifier extends beyond the backend itself, as users might
+interact with a database through an API, where they only know they need to put an integer, UUID, or whatever the
+shape of the local unique identifier is into an API endpoint as a path parameter, query parameter, or via post.
+Another example is ontologies, like the [Gene Ontology (GO)](https://bioregistry.io/registry/go), which manually curates
+local unique identifiers for biological processes and other entities. One example is `0032571`, which refers
+to the _response to vitamin K_ biological process. A data model might have a slot for a unique local identifier
+from GO or an API might require one in order to return some information about the entity.
 
-You can create a data model with Pydantic by writing a class that contains
-various instances `pydantic.Field`, which each hold onto metadata about how to validate
-the attribute of the data model. Often, these fields correspond to local unique identifiers
-from a given semantic space. Since the Bioregistry provides a comprehensive catalog of
-these semantic spaces that can each be referenced using a _prefix_, it would make sense
-that we could define the semantics of how a Field should be used based on what's in the Bioregistry.
-
-1. Automatically add context like a title, a description, and examples
-2. Automatically add validation information such as a regular expression pattern
-
-2. Create an API that looks up other identiiers based on the main one, ORCID
-3. Annotate both the data model for a person and the API that consumes an ORCID and produces instances of the
-   data model
+It would be great if any data model or API that takes in a local unique identifier from GO could be annotated with
+the fact that it comes from GO in a standard way, instead of just relying on naming conventions or comments. Further,
+it would be great if we could automatically enrich our data models and APIs with information about the resources
+that they are using.
 
 # Case Study
 
@@ -266,7 +268,7 @@ SPARQL_FORMAT = ...  # this long SPARQL query is available in the repo
 def get_scholar_from_orcid(orcid: str = SemanticPath(prefix="orcid")):
     """Get xrefs for a researcher in Wikidata, given ORCID identifier."""
     response = requests.get(
-       "https://query.wikidata.org/sparql",
+        "https://query.wikidata.org/sparql",
         params={"query": SPARQL_FORMAT % orcid, "format": "json"}
     ).json()
     result = response["results"]["bindings"][0]
@@ -338,6 +340,11 @@ class Scholar(BaseModel):
 charlie = Scholar(orcid="0000-0003-4423-4370", name="Charles Tapley Hoyt")
 assert charlie.orcid_url == 'https://orcid.org/0000-0003-4423-4370'
 ```
+
+## Next Steps
+
+I haven't decided yet if this should go inside the Bioregistry python package, or if it should be a stand-alone one.
+For now, this is just a proof-of-concept.
 
 # Funding
 
