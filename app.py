@@ -1,23 +1,28 @@
+from __future__ import annotations
+
 import requests
 from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
 from pydantic import BaseModel, Field
 
-from models import SemanticField, SemanticPath
+from fields import SemanticField, SemanticPath
+
+# TODO create decorator that adds derived fields with URLs for each semantic field
 
 
 class Scholar(BaseModel):
     """A model representing a researcher, who might have several IDs on different services."""
 
     orcid: str = SemanticField(..., prefix="orcid")
-    label: str = Field(..., json_schema_extra={"examples": ["Charles Tapley Hoyt"]})
+    name: str = Field(..., example="Charles Tapley Hoyt")
 
-    github: str | None = SemanticField(default=None, prefix="github")
-    scopus: str | None = SemanticField(default=None, prefix="scopus")
-    publons: str | None = SemanticField(default=None, prefix="publons.researcher")
-    semion: str | None = SemanticField(default=None, prefix="semion")
-    dblp: str | None = SemanticField(default=None, prefix="dblp.author")
     wos: str | None = SemanticField(default=None, prefix="wos.researcher")
+    dblp: str | None = SemanticField(default=None, prefix="dblp.author")
+    # override the Bioregistry's example for GitHub
+    github: str | None = SemanticField(default=None, prefix="github", example="cthoyt")
+    scopus: str | None = SemanticField(default=None, prefix="scopus")
+    semion: str | None = SemanticField(default=None, prefix="semion")
+    publons: str | None = SemanticField(default=None, prefix="publons.researcher")
     authorea: str | None = SemanticField(default=None, prefix="authorea.author")
 
 
@@ -46,8 +51,8 @@ SPARQL_FORMAT = """\
 SELECT * WHERE {
   VALUES ?orcid { "%s" }
   ?entity wdt:P496 ?orcid ;
-          rdfs:label ?label .
-  FILTER (lang(?label) = 'en')
+          rdfs:label ?name .
+  FILTER (lang(?name) = 'en')
   OPTIONAL { ?entity wdt:P2037 ?github . }
   OPTIONAL { ?entity wdt:P1153 ?scopus . }
   OPTIONAL { ?entity wdt:P3829 ?publons . }
