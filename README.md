@@ -2,6 +2,16 @@
 
 > Annotate your data models in Pydantic and APIs in FastAPI with the Bioregistry to make them more FAIR
 
+The demo can be run by cloning the repository, installing its requirements, and
+running the self-contained `app.py`.
+
+```shell
+git clone https://github.com/cthoyt/semantic-pydantic
+cd semantic-pydantic
+python -m pip install -r requirements.txt
+python app.py
+```
+
 Using [Pydantic](https://docs.pydantic.dev) for encoding data models and [FastAPI](https://fastapi.tiangolo.com)
 for implementing APIs on top of them has become a staple for many Python programmers. When this intersects
 with the semantic web, linked open data, and the natural sciences, we are still lacking a bridge to annotate
@@ -289,18 +299,6 @@ There are two big things to note:
 Now, we have an API that is also annotated with detailed semantics. If you take a look at the Swagger JSON file, it has
 similar references to Bioregistry prefixes for the routes themselves, and directly reuses the JSON schema for the
 response model.
-
-### How to Run the Demo
-
-The demo can be run by cloning the repository, installing its requirements, and
-running the self-contained `app.py`.
-
-```shell
-git clone https://github.com/cthoyt/pydantic-semantic
-cd pydantic-semantic
-python -m pip install -r requirements.txt
-python app.py
-```
 
 # Post Mortem
 
