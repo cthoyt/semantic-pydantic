@@ -151,13 +151,13 @@ entities in the semantic space more FAIR (findable, accessible, interoperable, r
 URI (CURIE) syntax](https://cthoyt.com/2021/09/14/curies.html), though this isn't the goal of this demo.
 
 I've mocked some Python code that bridges Pydantic and the Bioregistry in this
-repository (https://github.com/cthoyt/semantic-pydantic/). I'm calling it **semantic Pydantic** because it
+repository (https://github.com/cthoyt/semantic-pydantic/). I'm calling it **Semantic Pydantic** because it
 lets us annotate our data models with external metadata (and because it rhymes).
 
 Here's the same model as before, but now using a `SemanticField` that extends Pydantic's `Field`. It has a special
 keyword `prefix` that lets you give a Bioregistry prefix, then it is smart enough to fill out all the fields
 on its own. I also took the liberty of adding several more semantic spaces that identify scholars like
-[Web of Science (wos)](https://bioregistry.io/wos.researcher),
+[Web of Science (`wos`)](https://bioregistry.io/wos.researcher),
 [Scopus](https://bioregistry.io/scopus), and even [GitHub](https://bioregistry.io/github).
 
 ```python
@@ -196,13 +196,6 @@ python app.py
 ```
 
 # Post Mortem
-
-## Similar Things
-
-- I don't want to mess around with CURIEs or URIs here or any of the issues that come along with them, so this is
-  complementary to LinkML. This is more lightweight
-- This is for directly when you know data is attached to a certain vocabulary, and want a universal way
-  of referencing it rather than having to worry about (extended) prefix maps
 
 ## Future Ideas
 

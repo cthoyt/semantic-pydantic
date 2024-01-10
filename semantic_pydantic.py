@@ -94,16 +94,11 @@ def _create(cls, *args, prefix: str, **kwargs):
 def _get_description(record: bioregistry.Resource) -> str:
     return dedent(f"""\
     <p>This field corresponds to a local unique identifier from <i>{record.get_name()}</i></a>.</p>
-
-    <p>
+    <h4>Provenance</h4><p>
         The semantics of this field are derived from the
         <a href="https://bioregistry.io/{record.prefix}"><code>{record.prefix}</code></a> entry in
         the <a href="https://bioregistry.io">Bioregistry</a>: a registry of semantic web and linked 
-        open data compact URI (CURIE) prefixes and URI prefixes. A real example of a local unique identifier
-        from this semantic space is {record.get_example()}.
+        open data compact URI (CURIE) prefixes and URI prefixes.
     </p>
-
-    <h4>Description of Semantic Space</h4>
-
-    {record.get_description()}.
+    <h4>Description of Semantic Space</h4>{record.get_description()}.
     """)
