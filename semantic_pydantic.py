@@ -9,6 +9,7 @@ from textwrap import dedent
 
 import bioregistry
 from bioregistry.constants import PYDANTIC_1
+from pydantic import Field
 
 __all__ = [
     "SemanticField",
@@ -22,8 +23,6 @@ __all__ = [
 
 def SemanticField(*args, prefix: str, **kwargs):
     """Create a Pydantic Field, annotated with a Bioregistry prefix."""
-    from pydantic import Field
-
     return _create(Field, *args, prefix=prefix, **kwargs)
 
 
@@ -65,16 +64,12 @@ def SemanticForm(*args, prefix: str, **kwargs):
 def _create(cls, *args, prefix: str, **kwargs):
     record = bioregistry.get_resource(prefix)
     if record is None:
-        raise ValueError(
-            dedent(
-                f"""
+        raise ValueError(dedent(f"""
         Prefix is not registered in the Bioregistry: {prefix}. Please take one of following steps:
 
         - Check the registry at https://bioregistry.io/registry for correct spelling
         - Submit a new prefix request at https://github.com/biopragmatics/bioregistry/issues
-        """
-            )
-        )
+        """))
     if "title" not in kwargs:
         kwargs["title"] = record.get_name()
     if "description" not in kwargs:
