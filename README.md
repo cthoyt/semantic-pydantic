@@ -47,7 +47,8 @@ class ScholarV1(BaseModel):
 print(ScholarV1.schema_json(indent=2))
 ```
 
-If we dump this model to get a JSON schema, we get the following:
+<details>
+<summary>JSON Schema - Version 1</summary>
 
 ```json
 {
@@ -74,6 +75,8 @@ If we dump this model to get a JSON schema, we get the following:
   ]
 }
 ```
+
+</details>
 
 There are several places for improvement here:
 
@@ -107,7 +110,8 @@ class ScholarV2(BaseModel):
 print(ScholarV2.schema_json(indent=2))
 ```
 
-Now, we can see the nice improvements propagate through to the JSON schema:
+<details>
+<summary>JSON Schema - Version 2</summary>
 
 ```json
 {
@@ -138,6 +142,8 @@ Now, we can see the nice improvements propagate through to the JSON schema:
 }
 ```
 
+</details>
+
 However, this was a lot of work. It would be nice if there were some database of all the semantic spaces
 in the semantic web and natural sciences that contained the name, description, regular expression pattern,
 and examples. Then, we could draw from this database to automatically populate our fields.
@@ -166,7 +172,7 @@ from pydantic import BaseModel, Field
 from semantic_pydantic import SemanticField
 
 
-class Scholar(BaseModel):
+class ScholarV3(BaseModel):
     """A model representing a researcher, who might have several IDs on different services."""
 
     orcid: str = SemanticField(..., prefix="orcid")
@@ -179,7 +185,62 @@ class Scholar(BaseModel):
     semion: str | None = SemanticField(default=None, prefix="semion")
     publons: str | None = SemanticField(default=None, prefix="publons.researcher")
     authorea: str | None = SemanticField(default=None, prefix="authorea.author")
- ```
+
+
+print(ScholarV3.schema_json(indent=2))
+```
+
+Finally, we can see a very detailed JSON schema, which includes everything from before plus additional
+context from the Bioregistry, including the prefix itself as well as mappings from the Bioregistry prefix
+to external registries
+like [BARTOC](https://bioregistry.io/metaregistry/bartoc), [FAIRsharing](https://bioregistry.io/metaregistry/fairsharing),
+and others. Together, these make the data model more FAIR and support interoperability, since now it is possible to
+directly match the fields annotated with Bioregistry prefixes in this model to fields annotated with the same prefix in
+other models, even external to the project.
+
+<details>
+<summary>JSON Schema - Version 3</summary>
+
+```json
+{
+  "title": "ScholarV3",
+  "description": "A model representing a researcher, who might have several IDs on different services.",
+  "type": "object",
+  "properties": {
+    "orcid": {
+      "title": "Open Researcher and Contributor",
+      "description": "<p>This field corresponds to a local unique identifier from <i>Open Researcher and Contributor</i></a>.\n</p><h4>Provenance</h4><p>The semantics of this field are derived from the\n<a href=\"https://bioregistry.io/orcid\"><code>orcid</code></a> entry in\nthe <a href=\"https://bioregistry.io\">Bioregistry</a>: a registry of semantic web and linked \nopen data compact URI (CURIE) prefixes and URI prefixes.\n</p><h4>Description of Semantic Space</h4>ORCID (Open Researcher and Contributor ID) is an open, non-profit, community-based effort to create and maintain a registry of unique identifiers for individual researchers. ORCID records hold non-sensitive information such as name, email, organization name, and research activities.",
+      "pattern": "^\\d{4}-\\d{4}-\\d{4}-\\d{3}(\\d|X)$",
+      "example": "0000-0003-4423-4370",
+      "json_schema_extra": {
+        "bioregistry": {
+          "prefix": "orcid",
+          "mappings": {
+            "bartoc": "2021",
+            "biocontext": "ORCID",
+            "biolink": "ORCID",
+            "fairsharing": "FAIRsharing.nx58jg",
+            "go": "orcid",
+            "miriam": "orcid",
+            "n2t": "orcid",
+            "wikidata": "P496"
+          }
+        }
+      },
+      "type": "string"
+    },
+    "name": {
+      "title": "Name",
+      "example": "Charles Tapley Hoyt",
+      "type": "string"
+    },
+    ...
+  }
+}
+```
+
+Note that the extra semantic fields have been truncated for brevity. Each of them also has lots of detailed information.
+</details>
 
 ## Web Application
 
@@ -197,7 +258,21 @@ python app.py
 
 # Post Mortem
 
-## Future Ideas
+## Infrastructure for FAIR Models and APIs
+
+The first version of this idea just throws the Bioregistry data into the JSON schema. It would be interesting to
+develop this infrastructure further, such as keeping a catalog of all APIs that consume or produce data models
+containing semantic fields. A few places this would be great:
+
+1. The [Cheminformatics Microservice](https://github.com/Steinbeck-Lab/cheminformatics-microservice/issues) contains
+   tons of references to [InChi Keys (`inchikey`)](https://bioregistry.io/registry/inchikey)
+2. The Bioregistry could dog-food its own API
+3. The [INDRA Discovery API](https://discovery.indra.bio/apidocs) could be refactored to use semantic inputs and outputs
+
+There are also so many more examples, please let me know some services you think would benefit in the comments on my
+blog post.
+
+## Resolving URLs
 
 A key feature of the Bioregistry is that it provides a way to take a local unique identifier for an entity
 in a given semantic space and make a URL that points to a web page describing the entity. For example,

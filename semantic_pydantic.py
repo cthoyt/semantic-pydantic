@@ -65,12 +65,16 @@ def SemanticForm(*args, prefix: str, **kwargs):
 def _create(cls, *args, prefix: str, **kwargs):
     record = bioregistry.get_resource(prefix)
     if record is None:
-        raise ValueError(dedent(f"""
+        raise ValueError(
+            dedent(
+                f"""
         Prefix is not registered in the Bioregistry: {prefix}. Please take one of following steps:
 
         - Check the registry at https://bioregistry.io/registry for correct spelling
         - Submit a new prefix request at https://github.com/biopragmatics/bioregistry/issues
-        """))
+        """
+            )
+        )
     if "title" not in kwargs:
         kwargs["title"] = record.get_name()
     if "description" not in kwargs:
@@ -92,13 +96,17 @@ def _create(cls, *args, prefix: str, **kwargs):
 
 
 def _get_description(record: bioregistry.Resource) -> str:
-    return dedent(f"""\
-    <p>This field corresponds to a local unique identifier from <i>{record.get_name()}</i></a>.</p>
-    <h4>Provenance</h4><p>
-        The semantics of this field are derived from the
-        <a href="https://bioregistry.io/{record.prefix}"><code>{record.prefix}</code></a> entry in
-        the <a href="https://bioregistry.io">Bioregistry</a>: a registry of semantic web and linked 
-        open data compact URI (CURIE) prefixes and URI prefixes.
-    </p>
-    <h4>Description of Semantic Space</h4>{record.get_description()}.
-    """)
+    return f"""\
+<p>\
+This field corresponds to a local unique identifier from <i>{record.get_name()}</i></a>.
+</p>\
+<h4>Provenance</h4>\
+<p>\
+The semantics of this field are derived from the
+<a href="https://bioregistry.io/{record.prefix}"><code>{record.prefix}</code></a> entry in
+the <a href="https://bioregistry.io">Bioregistry</a>: a registry of semantic web and linked 
+open data compact URI (CURIE) prefixes and URI prefixes.
+</p>\
+<h4>Description of Semantic Space</h4>\
+{record.get_description()}
+""".strip()
