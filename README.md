@@ -147,8 +147,8 @@ and examples. Then, we could draw from this database to automatically populate o
 The good news is that such a database exists - it's called the [Bioregistry](https://bioregistry.io). Each semantic
 space (e.g., ORCID, DBLP) gets what's called a _prefix_ which is usually an acronym for the name of the resource
 that serves as the primary key for the semantic space. These prefixes are also useful in making references to
-entities in the semantic space more FAIR (findable, accessible, interoperable, reusable) using the compact
-URI (CURIE) syntax (though, this is the discussion for another blog post).
+entities in the semantic space more FAIR (findable, accessible, interoperable, reusable) using the [compact
+URI (CURIE) syntax](https://cthoyt.com/2021/09/14/curies.html), though this isn't the goal of this demo.
 
 I've mocked some Python code that bridges Pydantic and the Bioregistry in this
 repository (https://github.com/cthoyt/semantic-pydantic/). I'm calling it **semantic Pydantic** because it
