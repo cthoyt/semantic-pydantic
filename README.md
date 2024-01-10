@@ -1,4 +1,4 @@
-# pydantic-semantic
+# Semantic PyDantic
 
 Goals:
 
@@ -226,3 +226,7 @@ class Scholar(BaseModel):
 charlie = Scholar(orcid="0000-0003-4423-4370", name="Charles Tapley Hoyt")
 assert charlie.orcid_url == 'https://orcid.org/0000-0003-4423-4370'
 ```
+
+# Funding
+
+This work was funded by the Chan Zuckerberg Initiative (CZI) under award 2023-329850.
