@@ -244,7 +244,49 @@ Note that the extra semantic fields have been truncated for brevity. Each of the
 
 ## Web Application
 
-### How to Run
+Let's take the next step to a web application using FastAPI. The goal of this web application will be to look
+up the information for a scholar in Wikidata based on their ORCID. You don't really have to understand how the
+query works other than that it takes in an ORCID string and gives back an instance of the Scholar model we've been
+working on above.
+
+The app uses annotations for the query parameters, path parameters, and other inputs to routes using extensions of
+Pydantic `Fields`. So similar to before, we can extend their custom fields to be semantic in **Semantic Pydantic**.
+
+```python
+import requests
+from fastapi import FastAPI
+from semantic_pydantic import SemanticPath
+
+app = FastAPI(title="Semantic Pydantic Demo")
+Scholar = ...
+SPARQL_FORMAT = ...
+
+
+@app.get("/api/orcid/{orcid}", response_model=Scholar)
+def get_scholar_from_orcid(orcid: str = SemanticPath(prefix="orcid")):
+    """Get xrefs for a researcher in Wikidata, given ORCID identifier."""
+    response = requests.get("https://query.wikidata.org/sparql",
+                            params={"query": SPARQL_FORMAT % orcid, "format": "json"}).json()
+    result = response["results"]["bindings"][0]
+    return Scholar.validate({key: value["value"] for key, value in result.items()})
+```
+
+The real power is how this translates to the API, and more importantly, the automatically generated API documentation.
+First, the `SemanticPath` object which we used in place of a normal `fastapi.Path` also knows it is for ORCID
+identifiers. Second, the response model points to the Scholar class from before which already knows about its semantics.
+
+![](api-1.png)
+
+There are two big things to note:
+
+1. All the detailed information about ORCID makes it into the parameter, also giving an example for users to get started
+2. All the detailed information from the response model (Scholar) gets shown as a real example.
+
+Now, we have an API that is also annotated with detailed semantics. If you take a look at the Swagger JSON file, it has
+similar references to Bioregistry prefixes for the routes themselves, and directly reuses the JSON schema for the
+response model.
+
+### How to Run the Demo
 
 The demo can be run by cloning the repository, installing its requirements, and
 running the self-contained `app.py`.

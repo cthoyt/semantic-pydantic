@@ -30,7 +30,7 @@ app = FastAPI(title="Semantic Pydantic Demo")
 
 
 @app.get("/api/orcid/{orcid}", response_model=Scholar)
-def get_orcid(orcid: str = SemanticPath(prefix="orcid")):
+def get_scholar_from_orcid(orcid: str = SemanticPath(prefix="orcid")):
     """Get xrefs for a researcher in Wikidata, given ORCID identifier."""
     res = requests.get(
         "https://query.wikidata.org/sparql",
