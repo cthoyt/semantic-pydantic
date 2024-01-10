@@ -258,17 +258,19 @@ from fastapi import FastAPI
 from semantic_pydantic import SemanticPath
 
 app = FastAPI(title="Semantic Pydantic Demo")
-Scholar = ...
-SPARQL_FORMAT = ...
+Scholar = ...  # defined before
+SPARQL_FORMAT = ...  # this long SPARQL query is available in the repo
 
 
 @app.get("/api/orcid/{orcid}", response_model=Scholar)
 def get_scholar_from_orcid(orcid: str = SemanticPath(prefix="orcid")):
     """Get xrefs for a researcher in Wikidata, given ORCID identifier."""
-    response = requests.get("https://query.wikidata.org/sparql",
-                            params={"query": SPARQL_FORMAT % orcid, "format": "json"}).json()
+    response = requests.get(
+       "https://query.wikidata.org/sparql",
+        params={"query": SPARQL_FORMAT % orcid, "format": "json"}
+    ).json()
     result = response["results"]["bindings"][0]
-    return Scholar.validate({key: value["value"] for key, value in result.items()})
+    return Scholar.validate({k: v["value"] for k, v in result.items()})
 ```
 
 The real power is how this translates to the API, and more importantly, the automatically generated API documentation.
