@@ -12,11 +12,11 @@
     <a href="https://github.com/cthoyt/semantic-pydantic/actions/workflows/tests.yml">
         <img alt="Tests" src="https://github.com/cthoyt/semantic-pydantic/actions/workflows/tests.yml/badge.svg" /></a>
     <a href="https://pypi.org/project/semantic-pydantic">
-        <img alt="PyPI" src="https://img.shields.io/pypi/v/semantic_pydantic" /></a>
+        <img alt="PyPI" src="https://img.shields.io/pypi/v/semantic-pydantic" /></a>
     <a href="https://pypi.org/project/semantic-pydantic">
-        <img alt="PyPI - Python Version" src="https://img.shields.io/pypi/pyversions/semantic_pydantic" /></a>
+        <img alt="PyPI - Python Version" src="https://img.shields.io/pypi/pyversions/semantic-pydantic" /></a>
     <a href="https://github.com/cthoyt/semantic-pydantic/blob/main/LICENSE">
-        <img alt="PyPI - License" src="https://img.shields.io/pypi/l/semantic_pydantic" /></a>
+        <img alt="PyPI - License" src="https://img.shields.io/pypi/l/semantic-pydantic" /></a>
     <a href='https://semantic_pydantic.readthedocs.io/en/latest/?badge=latest'>
         <img src='https://readthedocs.org/projects/semantic_pydantic/badge/?version=latest' alt='Documentation Status' /></a>
     <a href="https://codecov.io/gh/cthoyt/semantic-pydantic/branch/main">
@@ -122,7 +122,6 @@ This project has been supported by the following organizations (in alphabetical 
 
 -->
 
-<!--
 ### 💰 Funding
 
 This work was initially funded by the Chan Zuckerberg Initiative (CZI) under award 2023-329850.
