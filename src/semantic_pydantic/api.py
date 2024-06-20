@@ -9,12 +9,15 @@ comes via the Bioregistry.
 from __future__ import annotations
 
 from textwrap import dedent
+from typing import TYPE_CHECKING
 
 import bioregistry
-import fastapi
 from bioregistry.constants import PYDANTIC_1
 from pydantic import Field
 from pydantic.fields import FieldInfo
+
+if TYPE_CHECKING:
+    import fastapi
 
 __all__ = [
     "SemanticField",
