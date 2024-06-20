@@ -1,0 +1,21 @@
+{
+  "template": "https://github.com/cthoyt/cookiecutter-snekpack",
+  "commit": "f973cb05c148402eefde0077c5b88786a0cbab3c",
+  "checkout": null,
+  "context": {
+    "cookiecutter": {
+      "package_name": "semantic_pydantic",
+      "package_name_stylized": "Semantic Pydantic",
+      "short_description": "Integration between the Bioregistry and Pydantic type annotations.",
+      "author_name": "Charles Tapley Hoyt",
+      "author_email": "cthoyt@gmail.com",
+      "github_organization_name": "cthoyt",
+      "github_repository_name": "semantic-pydantic",
+      "command_line_interface": false,
+      "gitlab": false,
+      "__gh_slug": "cthoyt/semantic-pydantic",
+      "_template": "https://github.com/cthoyt/cookiecutter-snekpack"
+    }
+  },
+  "directory": null
+}

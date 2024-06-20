@@ -1,5 +1,0 @@
-bioregistry
-requests
-fastapi
-pydantic
-uvicorn

@@ -1,10 +1,11 @@
+"""A demo of Semantic Pydantic."""
+
 from __future__ import annotations
 
 import requests
 from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
 from pydantic import BaseModel, Field
-
 from semantic_pydantic import SemanticField, SemanticPath
 
 # TODO create decorator that adds derived fields with URLs for each semantic field
@@ -17,7 +18,6 @@ class Scholar(BaseModel):
     name: str = Field(..., example="Charles Tapley Hoyt")
 
     wos: str | None = SemanticField(default=None, prefix="wos.researcher")
-    dblp: str | None = SemanticField(default=None, prefix="dblp.author")
     # override the Bioregistry's example for GitHub
     github: str | None = SemanticField(default=None, prefix="github", example="cthoyt")
     scopus: str | None = SemanticField(default=None, prefix="scopus")
@@ -35,13 +35,14 @@ def get_scholar_from_orcid(orcid: str = SemanticPath(prefix="orcid")):
     res = requests.get(
         "https://query.wikidata.org/sparql",
         params={"query": SPARQL_FORMAT % orcid, "format": "json"},
+        timeout=3,
     ).json()
     return Scholar.validate(
         {key: value["value"] for key, value in res["results"]["bindings"][0].items()}
     )
 
 
-@app.get("/")
+@app.get("/", include_in_schema=False)
 def redirect_to_docs():
     """Redirect to the docs page."""
     return RedirectResponse("/docs")
@@ -57,9 +58,8 @@ SELECT * WHERE {
   OPTIONAL { ?entity wdt:P1153 ?scopus . }
   OPTIONAL { ?entity wdt:P3829 ?publons . }
   OPTIONAL { ?entity wdt:P7671 ?semion . }
-  OPTIONAL { ?entity wdt:P2456 ?dblp . }
   OPTIONAL { ?entity wdt:P1053 ?wos . }
-  OPTIONAL { ?entity wdt:P5039 ?authorea . }   
+  OPTIONAL { ?entity wdt:P5039 ?authorea . }
 }
 LIMIT 1
 """
