@@ -32,12 +32,17 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3 :: Only",
-    # TODO add your topics from the Trove controlled vocabulary (see https://pypi.org/classifiers)
+    "Framework :: Pydantic",
+    "Framework :: Pydantic :: 1",
+    "Framework :: Pydantic :: 2",
+    "Framework :: FastAPI",
 ]
 keywords = [
     "snekpack", # please keep this keyword to credit the cookiecutter-snekpack template
     "cookiecutter",
-    # TODO add your own free-text keywords
+    "pydantic",
+    "bioregistry",
+    "fastapi",
 ]
 
 # License Information. This can be any valid SPDX identifiers that can be resolved
@@ -72,7 +77,7 @@ docs = [
 "Bug Tracker" = "https://github.com/cthoyt/semantic-pydantic/issues"
 Homepage = "https://github.com/cthoyt/semantic-pydantic"
 Repository = "https://github.com/cthoyt/semantic-pydantic.git"
-Documentation = "https://semantic_pydantic.readthedocs.io"
+Documentation = "https://semantic-pydantic.readthedocs.io"
 
 [tool.setuptools]
 package-dir = { "" = "src" }
