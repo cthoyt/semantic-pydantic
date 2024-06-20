@@ -11,9 +11,9 @@
 <p align="center">
     <a href="https://github.com/cthoyt/semantic-pydantic/actions/workflows/tests.yml">
         <img alt="Tests" src="https://github.com/cthoyt/semantic-pydantic/actions/workflows/tests.yml/badge.svg" /></a>
-    <a href="https://pypi.org/project/semantic_pydantic">
+    <a href="https://pypi.org/project/semantic-pydantic">
         <img alt="PyPI" src="https://img.shields.io/pypi/v/semantic_pydantic" /></a>
-    <a href="https://pypi.org/project/semantic_pydantic">
+    <a href="https://pypi.org/project/semantic-pydantic">
         <img alt="PyPI - Python Version" src="https://img.shields.io/pypi/pyversions/semantic_pydantic" /></a>
     <a href="https://github.com/cthoyt/semantic-pydantic/blob/main/LICENSE">
         <img alt="PyPI - License" src="https://img.shields.io/pypi/l/semantic_pydantic" /></a>
@@ -82,14 +82,12 @@ running the self-contained `demo.py`.
 
 ## 🚀 Installation
 
-<!-- Uncomment this section after your first ``tox -e finish``
 The most recent release can be installed from
 [PyPI](https://pypi.org/project/semantic_pydantic/) with:
 
 ```shell
 pip install semantic_pydantic
 ```
--->
 
 The most recent code and data can be installed directly from GitHub with:
 
