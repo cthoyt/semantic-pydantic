@@ -106,6 +106,12 @@ plugins = [
 [tool.doc8]
 max-line-length = 120
 
+# Pytest, see https://docs.pytest.org/en/stable/reference/customize.html#pyproject-toml
+[tool.pytest.ini_options]
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')"
+]
+
 # Coverage, see https://coverage.readthedocs.io/en/latest/config.html
 [tool.coverage.run]
 branch = true
@@ -148,7 +154,6 @@ profile = "black"
 multi_line_output = 3
 line_length = 100
 include_trailing_comma = true
-reverse_relative = true
 
 [tool.ruff]
 line-length = 100
@@ -181,6 +186,18 @@ ignore = [
 [tool.ruff.lint.per-file-ignores]
 # Ignore commented out code in Sphinx configuration file
 "docs/source/conf.py" = ["ERA001"]
+# Prints are okay in notebooks
+"notebooks/**/*.ipynb" = ["T201"]
 
 [tool.ruff.lint.pydocstyle]
 convention = "pep257"
+
+[tool.ruff.lint.isort]
+relative-imports-order = "closest-to-furthest"
+known-third-party = [
+    "tqdm",
+]
+known-first-party = [
+    "semantic_pydantic",
+    "tests",
+]
