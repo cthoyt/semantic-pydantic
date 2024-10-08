@@ -9,15 +9,11 @@ comes via the Bioregistry.
 from __future__ import annotations
 
 from textwrap import dedent
-from typing import TYPE_CHECKING
+from typing import Any, Callable
 
 import bioregistry
-from bioregistry.constants import PYDANTIC_1
 from pydantic import Field
 from pydantic.fields import FieldInfo
-
-if TYPE_CHECKING:
-    import fastapi
 
 __all__ = [
     "SemanticField",
@@ -29,47 +25,52 @@ __all__ = [
 ]
 
 
-def SemanticField(*args, prefix: str, **kwargs) -> FieldInfo:  # noqa:N802
+def SemanticField(*args: Any, prefix: str, **kwargs: Any) -> FieldInfo:  # noqa:N802
     """Create a Pydantic Field, annotated with a Bioregistry prefix."""
     return _create(Field, *args, prefix=prefix, **kwargs)
 
 
-def SemanticBody(*args, prefix: str, **kwargs) -> fastapi.Body:  # noqa:N802
+def SemanticBody(*args: Any, prefix: str, **kwargs: Any) -> FieldInfo:  # noqa:N802
     """Create a FastAPI Body parameter, annotated with a Bioregistry prefix."""
     from fastapi import Body
 
     return _create(Body, *args, prefix=prefix, **kwargs)
 
 
-def SemanticQuery(*args, prefix: str, **kwargs) -> fastapi.Query:  # noqa:N802
+def SemanticQuery(*args: Any, prefix: str, **kwargs: Any) -> FieldInfo:  # noqa:N802
     """Create a FastAPI Query parameter, annotated with a Bioregistry prefix."""
     from fastapi import Query
 
     return _create(Query, *args, prefix=prefix, **kwargs)
 
 
-def SemanticPath(*args, prefix: str, **kwargs) -> fastapi.Path:  # noqa:N802
+def SemanticPath(*args: Any, prefix: str, **kwargs: Any) -> FieldInfo:  # noqa:N802
     """Create a FastAPI Path parameter, annotated with a Bioregistry prefix."""
     from fastapi import Path
 
     return _create(Path, *args, prefix=prefix, **kwargs)
 
 
-def SemanticHeader(*args, prefix: str, **kwargs) -> fastapi.Header:  # noqa:N802
+def SemanticHeader(*args: Any, prefix: str, **kwargs: Any) -> FieldInfo:  # noqa:N802
     """Create a FastAPI Header parameter, annotated with a Bioregistry prefix."""
     from fastapi import Header
 
     return _create(Header, *args, prefix=prefix, **kwargs)
 
 
-def SemanticForm(*args, prefix: str, **kwargs) -> fastapi.Form:  # noqa:N802
+def SemanticForm(*args: Any, prefix: str, **kwargs: Any) -> FieldInfo:  # noqa:N802
     """Create a FastAPI Form parameter, annotated with a Bioregistry prefix."""
     from fastapi import Form
 
     return _create(Form, *args, prefix=prefix, **kwargs)
 
 
-def _create(func, *args, prefix: str, **kwargs):
+def _create(
+    func: Callable[..., FieldInfo],
+    *args: Any,
+    prefix: str,
+    **kwargs: Any,
+) -> FieldInfo:
     record = bioregistry.get_resource(prefix)
     if record is None:
         raise ValueError(
@@ -82,23 +83,25 @@ def _create(func, *args, prefix: str, **kwargs):
         """
             )
         )
-    if "title" not in kwargs:
-        kwargs["title"] = record.get_name()
-    if "description" not in kwargs:
-        kwargs["description"] = _get_description(record)
-    if PYDANTIC_1:
-        if "regex" not in kwargs:
-            kwargs["regex"] = record.get_pattern()
-    else:
-        if "pattern" not in kwargs:
-            kwargs["pattern"] = record.get_pattern()
-    if "example" not in kwargs:
-        kwargs["example"] = record.get_example()
     jse = kwargs.setdefault("json_schema_extra", {})
     jse["bioregistry"] = {
         "prefix": record.prefix,
         "mappings": record.mappings,
     }
+
+    if "title" not in kwargs:
+        kwargs["title"] = record.get_name()
+    if "description" not in kwargs:
+        kwargs["description"] = _get_description(record)
+
+    if pattern := record.get_pattern():
+        if "pattern" not in kwargs:
+            kwargs["pattern"] = pattern
+
+    if example := record.get_example():
+        if "example" not in kwargs:
+            jse["example"] = example
+
     return func(*args, **kwargs)
 
 
