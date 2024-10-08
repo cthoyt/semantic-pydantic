@@ -5,9 +5,10 @@ import unittest
 
 import fastapi
 from pydantic import BaseModel, Field
+from starlette.testclient import TestClient
+
 from semantic_pydantic import SemanticField, SemanticPath
 from semantic_pydantic.version import get_version
-from starlette.testclient import TestClient
 
 CHARLIE_ORCID = "0000-0003-4423-4370"
 

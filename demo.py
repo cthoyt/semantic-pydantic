@@ -6,6 +6,7 @@ import requests
 from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
 from pydantic import BaseModel, Field
+
 from semantic_pydantic import SemanticField, SemanticPath
 
 # TODO create decorator that adds derived fields with URLs for each semantic field
