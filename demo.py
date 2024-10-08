@@ -6,7 +6,8 @@ import requests
 from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
 from pydantic import BaseModel, Field
-from semantic_pydantic import SemanticField, SemanticPath
+
+from semantic_pydantic import Identifier, SemanticPath
 
 # TODO create decorator that adds derived fields with URLs for each semantic field
 
@@ -14,16 +15,15 @@ from semantic_pydantic import SemanticField, SemanticPath
 class Scholar(BaseModel):
     """A model representing a researcher, who might have several IDs on different services."""
 
-    orcid: str = SemanticField(..., prefix="orcid")
+    orcid: Identifier
     name: str = Field(..., example="Charles Tapley Hoyt")
 
-    wos: str | None = SemanticField(default=None, prefix="wos.researcher")
-    # override the Bioregistry's example for GitHub
-    github: str | None = SemanticField(default=None, prefix="github", example="cthoyt")
-    scopus: str | None = SemanticField(default=None, prefix="scopus")
-    semion: str | None = SemanticField(default=None, prefix="semion")
-    publons: str | None = SemanticField(default=None, prefix="publons.researcher")
-    authorea: str | None = SemanticField(default=None, prefix="authorea.author")
+    wos_researcher: Identifier | None = None
+    github: Identifier | None = None
+    scopus: Identifier | None = None
+    semion: Identifier | None = None
+    publons_researcher: Identifier | None = None
+    authorea_author: Identifier | None = None
 
 
 app = FastAPI(title="Semantic Pydantic Demo")
@@ -37,7 +37,7 @@ def get_scholar_from_orcid(orcid: str = SemanticPath(prefix="orcid")):
         params={"query": SPARQL_FORMAT % orcid, "format": "json"},
         timeout=3,
     ).json()
-    return Scholar.validate(
+    return Scholar.model_validate(
         {key: value["value"] for key, value in res["results"]["bindings"][0].items()}
     )
 

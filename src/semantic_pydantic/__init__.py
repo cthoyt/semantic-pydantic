@@ -8,6 +8,7 @@ from .api import (
     SemanticPath,
     SemanticQuery,
 )
+from .czzz import CURIE, Identifier, Prefix
 
 __all__ = [
     "SemanticField",
@@ -16,4 +17,7 @@ __all__ = [
     "SemanticForm",
     "SemanticHeader",
     "SemanticQuery",
+    "CURIE",
+    "Identifier",
+    "Prefix",
 ]
