@@ -61,7 +61,6 @@ jobs:
       matrix:
         os: [ ubuntu-latest ]
         python-version: [ "3.12", "3.9" ]
-        pydantic: [ "pydantic1", "pydantic2" ]
     steps:
       - uses: actions/checkout@v2
       - name: Set up Python ${{ matrix.python-version }}
@@ -72,7 +71,7 @@ jobs:
         run: pip install tox tox-uv
       - name: Test with pytest and generate coverage file
         run:
-          tox run -e py-${{ matrix.pydantic }}
+          tox run -e py
       - name: Upload coverage report to codecov
         uses: codecov/codecov-action@v1
         if: success()

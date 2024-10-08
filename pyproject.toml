@@ -33,7 +33,6 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3 :: Only",
     "Framework :: Pydantic",
-    "Framework :: Pydantic :: 1",
     "Framework :: Pydantic :: 2",
     "Framework :: FastAPI",
 ]
@@ -54,7 +53,7 @@ requires-python = ">=3.9"
 dependencies = [
     "bioregistry",
     "requests",
-    "pydantic",
+    "pydantic>=2.0",
 ]
 
 [project.optional-dependencies]
