@@ -28,13 +28,16 @@ jobs:
         run: |
           pip install tox tox-uv
       - name: Run command
-        run: tox run -e ${{ matrix.tox-command }}
+        run: tox -e ${{ matrix.tox-command }}
   docs:
     name: Documentation
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [ "3.12", "3.9" ]
+        # We only test documentation on the latest version
+        # sphinx 8.0 / sphinx-rtd-theme 3.0 discontinued Python 3.9 support
+        # a year early, which prompted re-thinking about this.
+        python-version: [ "3.12" ]
     steps:
       - uses: actions/checkout@v2
       - name: Set up Python ${{ matrix.python-version }}
@@ -46,11 +49,11 @@ jobs:
           pip install tox tox-uv
           sudo apt-get install graphviz
       - name: Check RST conformity with doc8
-        run: tox run -e doc8
+        run: tox -e doc8
       - name: Check docstring coverage
-        run: tox run -e docstr-coverage
+        run: tox -e docstr-coverage
       - name: Check documentation build with Sphinx
-        run: tox run -e docs-test
+        run: tox -e docs-test
   tests:
     name: Tests
     runs-on: ${{ matrix.os }}
