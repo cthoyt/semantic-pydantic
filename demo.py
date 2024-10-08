@@ -37,7 +37,6 @@ def get_scholar_from_orcid(orcid: str = SemanticPath(prefix="orcid")):
         params={"query": SPARQL_FORMAT % orcid, "format": "json"},
         timeout=3,
     ).json()
-    return Scholar.validate(
         {key: value["value"] for key, value in res["results"]["bindings"][0].items()}
     )
 

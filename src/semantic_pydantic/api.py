@@ -12,7 +12,6 @@ from textwrap import dedent
 from typing import TYPE_CHECKING
 
 import bioregistry
-from bioregistry.constants import PYDANTIC_1
 from pydantic import Field
 from pydantic.fields import FieldInfo
 
@@ -82,23 +81,25 @@ def _create(func, *args, prefix: str, **kwargs):
         """
             )
         )
-    if "title" not in kwargs:
-        kwargs["title"] = record.get_name()
-    if "description" not in kwargs:
-        kwargs["description"] = _get_description(record)
-    if PYDANTIC_1:
-        if "regex" not in kwargs:
-            kwargs["regex"] = record.get_pattern()
-    else:
-        if "pattern" not in kwargs:
-            kwargs["pattern"] = record.get_pattern()
-    if "example" not in kwargs:
-        kwargs["example"] = record.get_example()
     jse = kwargs.setdefault("json_schema_extra", {})
     jse["bioregistry"] = {
         "prefix": record.prefix,
         "mappings": record.mappings,
     }
+
+    if "title" not in kwargs:
+        kwargs["title"] = record.get_name()
+    if "description" not in kwargs:
+        kwargs["description"] = _get_description(record)
+
+    if pattern := record.get_pattern():
+        if "pattern" not in kwargs:
+            kwargs["pattern"] = pattern
+
+    if example := record.get_example():
+        if "example" not in kwargs:
+            jse["example"] = example
+
     return func(*args, **kwargs)
 
 
