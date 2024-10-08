@@ -63,6 +63,7 @@ tests = [
 ]
 fastapi = [
     "fastapi",
+    "httpx",
 ]
 docs = [
     "sphinx",
