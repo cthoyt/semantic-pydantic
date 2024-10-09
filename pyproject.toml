@@ -1,7 +1,7 @@
 # See https://setuptools.readthedocs.io/en/latest/build_meta.html
 [build-system]
 requires = ["uv>=0.4.18,<5"]
-build-backend = "uv"
+build-backend = "uv._build_backend"
 
 [project]
 name = "semantic_pydantic"
