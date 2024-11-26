@@ -1,6 +1,5 @@
 """Trivial version test."""
 
-import typing
 import unittest
 
 import fastapi
@@ -18,7 +17,7 @@ class Scholar(BaseModel):
 
     orcid: str = SemanticField(..., prefix="orcid")
     name: str = Field(..., example="Charles Tapley Hoyt")
-    github: typing.Optional[str] = SemanticField(default=None, prefix="github", example="cthoyt")
+    github: str | None = SemanticField(default=None, prefix="github", example="cthoyt")
 
 
 class TestAPI(unittest.TestCase):

@@ -10,10 +10,10 @@ from .api import (
 )
 
 __all__ = [
-    "SemanticField",
-    "SemanticPath",
     "SemanticBody",
+    "SemanticField",
     "SemanticForm",
     "SemanticHeader",
+    "SemanticPath",
     "SemanticQuery",
 ]
