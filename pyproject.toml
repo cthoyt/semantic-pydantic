@@ -67,6 +67,8 @@ fastapi = [
     "fastapi",
     "httpx",
 ]
+
+# [dependency-groups]
 docs = [
     "sphinx>=8",
     "sphinx-rtd-theme>=3.0",
