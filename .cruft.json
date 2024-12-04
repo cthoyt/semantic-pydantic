@@ -1,6 +1,6 @@
 {
   "template": "https://github.com/cthoyt/cookiecutter-snekpack",
-  "commit": "09b56a553e7291e762956a6daf9016e17f4992c4",
+  "commit": "1884310d930f56787c96d4eba45bcb4a5225f7cb",
   "checkout": null,
   "context": {
     "cookiecutter": {
@@ -15,6 +15,7 @@
       "gitlab": false,
       "runner": "tox",
       "__runner": "tox -e",
+      "__runner_uv": "--with tox-uv tox -e",
       "__runner_pip": "tox tox-uv",
       "__runner_tests": "py",
       "__gh_slug": "cthoyt/semantic-pydantic",

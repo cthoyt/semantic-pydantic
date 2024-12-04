@@ -8,19 +8,20 @@ comes via the Bioregistry.
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from textwrap import dedent
-from typing import Any, Callable
+from typing import Any
 
 import bioregistry
 from pydantic import Field
 from pydantic.fields import FieldInfo
 
 __all__ = [
-    "SemanticField",
-    "SemanticPath",
     "SemanticBody",
+    "SemanticField",
     "SemanticForm",
     "SemanticHeader",
+    "SemanticPath",
     "SemanticQuery",
 ]
 
