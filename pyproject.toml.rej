@@ -1,0 +1,10 @@
+diff a/pyproject.toml b/pyproject.toml	(rejected hunks)
+@@ -57,7 +57,7 @@ dependencies = [
+ [project.optional-dependencies]
+ tests = [
+     "pytest",
+-    "coverage",
++    "coverage[toml]",
+ ]
+ docs = [
+     "sphinx>=8",
