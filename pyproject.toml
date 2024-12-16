@@ -76,11 +76,13 @@ docs = [
 ]
 
 # See https://packaging.python.org/en/latest/guides/writing-pyproject-toml/#urls
+# and also https://packaging.python.org/en/latest/specifications/well-known-project-urls/
 [project.urls]
 "Bug Tracker" = "https://github.com/cthoyt/semantic-pydantic/issues"
 Homepage = "https://github.com/cthoyt/semantic-pydantic"
 Repository = "https://github.com/cthoyt/semantic-pydantic.git"
 Documentation = "https://semantic-pydantic.readthedocs.io"
+Funding = "https://github.com/sponsors/cthoyt"
 
 [tool.cruft]
 skip = [
