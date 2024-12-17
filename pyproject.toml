@@ -1,5 +1,5 @@
 [build-system]
-requires = ["uv>=0.5.6,<0.6.0"]
+requires = ["uv>=0.5.9,<0.6.0"]
 # The uv backend entered preview mode in https://github.com/astral-sh/uv/pull/8886/files
 # with the 0.5.0 release. See also https://github.com/astral-sh/uv/issues/3957 for tracking.
 build-backend = "uv"
@@ -50,7 +50,9 @@ keywords = [
 # License Information. This can be any valid SPDX identifiers that can be resolved
 # with URLs like https://spdx.org/licenses/MIT
 # See https://packaging.python.org/en/latest/guides/writing-pyproject-toml/#license
-license = { file = "LICENSE" }
+license-files = [
+    "LICENSE",
+]
 
 requires-python = ">=3.10"
 dependencies = [
