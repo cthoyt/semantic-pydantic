@@ -22,7 +22,7 @@ sys.path.insert(0, os.path.abspath("../../src"))
 # -- Project information -----------------------------------------------------
 
 project = "semantic_pydantic"
-copyright = f"{date.today().year}, Charles Tapley Hoyt"
+copyright = f"{date.today().year}, Charles Tapley Hoyt"  # noqa:DTZ011
 author = "Charles Tapley Hoyt"
 
 # The full version, including alpha/beta/rc tags.
