@@ -40,29 +40,30 @@ Annotate your data models in Pydantic and APIs in FastAPI with the Bioregistry t
 You can use one of the several extensions to Pydantic and FastAPI's `Field` classes.
 
 ```python
+from typing import Annotated
 from pydantic import BaseModel, Field
-
 from semantic_pydantic import SemanticField
 
 
 class Scholar(BaseModel):
     """A model representing a researcher, who might have several IDs on different services."""
 
-    orcid: str = SemanticField(..., prefix="orcid")
-    name: str = Field(..., example="Charles Tapley Hoyt")
+    orcid: Annotated[str, SemanticField(prefix="orcid")]
+    name: Annotated[str, Field(examples=["Charles Tapley Hoyt"])]
 
-    wos: str | None = SemanticField(default=None, prefix="wos.researcher")
-    dblp: str | None = SemanticField(default=None, prefix="dblp.author")
-    github: str | None = SemanticField(default=None, prefix="github")
-    scopus: str | None = SemanticField(default=None, prefix="scopus")
-    semion: str | None = SemanticField(default=None, prefix="semion")
-    publons: str | None = SemanticField(default=None, prefix="publons.researcher")
-    authorea: str | None = SemanticField(default=None, prefix="authorea.author")
+    wos: Annotated[str | None, SemanticField(prefix="wos.researcher")] = None
+    dblp: Annotated[str | None, SemanticField(prefix="dblp.author")] = None
+    github: Annotated[str | None, SemanticField(prefix="github")] = None
+    scopus: Annotated[str | None, SemanticField(prefix="scopus")] = None
+    semion: Annotated[str | None, SemanticField(prefix="semion")] = None
+    publons: Annotated[str | None, SemanticField(prefix="publons.researcher")] = None
+    authorea: Annotated[str | None, SemanticField(prefix="authorea.author")] = None
 ```
 
 Similarly, this can be used in FastAPI.
 
 ```python
+from typing import Annotated
 from fastapi import FastAPI
 from semantic_pydantic import SemanticPath
 
@@ -71,7 +72,7 @@ Scholar = ...  # defined before
 
 
 @app.get("/api/orcid/{orcid}", response_model=Scholar)
-def get_scholar_from_orcid(orcid: str = SemanticPath(prefix="orcid")):
+def get_scholar_from_orcid(orcid: Annotated[str, SemanticPath(prefix="orcid")]) -> Scholar:
     """Get xrefs for a researcher in Wikidata, given ORCID identifier."""
     ...  # full implementation in https://github.com/cthoyt/semantic-pydantic
     return Scholar(...)
