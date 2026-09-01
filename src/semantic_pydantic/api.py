@@ -10,7 +10,7 @@ from __future__ import annotations
 
 from collections.abc import Callable
 from textwrap import dedent
-from typing import Any
+from typing import Any, ParamSpec
 
 import bioregistry
 from pydantic import Field
@@ -25,52 +25,54 @@ __all__ = [
     "SemanticQuery",
 ]
 
+P = ParamSpec("P")
+
 
 def SemanticField(*args: Any, prefix: str, **kwargs: Any) -> FieldInfo:  # noqa:N802
     """Create a Pydantic Field, annotated with a Bioregistry prefix."""
-    return _create(Field, *args, prefix=prefix, **kwargs)
+    return _create(Field, prefix, *args, **kwargs)
 
 
 def SemanticBody(*args: Any, prefix: str, **kwargs: Any) -> FieldInfo:  # noqa:N802
     """Create a FastAPI Body parameter, annotated with a Bioregistry prefix."""
     from fastapi import Body
 
-    return _create(Body, *args, prefix=prefix, **kwargs)
+    return _create(Body, prefix, *args, **kwargs)
 
 
 def SemanticQuery(*args: Any, prefix: str, **kwargs: Any) -> FieldInfo:  # noqa:N802
     """Create a FastAPI Query parameter, annotated with a Bioregistry prefix."""
     from fastapi import Query
 
-    return _create(Query, *args, prefix=prefix, **kwargs)
+    return _create(Query, prefix, *args, **kwargs)
 
 
 def SemanticPath(*args: Any, prefix: str, **kwargs: Any) -> FieldInfo:  # noqa:N802
     """Create a FastAPI Path parameter, annotated with a Bioregistry prefix."""
     from fastapi import Path
 
-    return _create(Path, *args, prefix=prefix, **kwargs)
+    return _create(Path, prefix, *args, **kwargs)
 
 
 def SemanticHeader(*args: Any, prefix: str, **kwargs: Any) -> FieldInfo:  # noqa:N802
     """Create a FastAPI Header parameter, annotated with a Bioregistry prefix."""
     from fastapi import Header
 
-    return _create(Header, *args, prefix=prefix, **kwargs)
+    return _create(Header, prefix, *args, **kwargs)
 
 
 def SemanticForm(*args: Any, prefix: str, **kwargs: Any) -> FieldInfo:  # noqa:N802
     """Create a FastAPI Form parameter, annotated with a Bioregistry prefix."""
     from fastapi import Form
 
-    return _create(Form, *args, prefix=prefix, **kwargs)
+    return _create(Form, prefix, *args, **kwargs)
 
 
 def _create(
-    func: Callable[..., FieldInfo],
-    *args: Any,
+    func: Callable[P, FieldInfo],
     prefix: str,
-    **kwargs: Any,
+    *args: P.args,
+    **kwargs: P.kwargs,
 ) -> FieldInfo:
     record = bioregistry.get_resource(prefix)
     if record is None:
@@ -84,7 +86,7 @@ def _create(
         """
             )
         )
-    jse = kwargs.setdefault("json_schema_extra", {})
+    jse: dict[str, Any] = kwargs.setdefault("json_schema_extra", {})  # type:ignore[assignment]
     jse["bioregistry"] = {
         "prefix": record.prefix,
         "mappings": record.mappings,
@@ -95,29 +97,34 @@ def _create(
     if "description" not in kwargs:
         kwargs["description"] = _get_description(record)
 
-    if pattern := record.get_pattern():
-        if "pattern" not in kwargs:
-            kwargs["pattern"] = pattern
+    if (pattern := record.get_pattern()) and "pattern" not in kwargs:
+        kwargs["pattern"] = pattern
 
-    if example := record.get_example():
-        if "example" not in kwargs:
-            jse["example"] = example
+    # TODO update to examples?
+    if (example := record.get_example()) and "example" not in kwargs:
+        jse["example"] = example
 
     return func(*args, **kwargs)
 
 
 def _get_description(record: bioregistry.Resource) -> str:
-    return f"""\
-<p>\
-This field corresponds to a local unique identifier from <i>{record.get_name()}</i></a>.
-</p>\
-<h4>Provenance</h4>\
-<p>\
-The semantics of this field are derived from the
-<a href="https://bioregistry.io/{record.prefix}"><code>{record.prefix}</code></a> entry in
-the <a href="https://bioregistry.io">Bioregistry</a>: a registry of semantic web and linked
-open data compact URI (CURIE) prefixes and URI prefixes.
-</p>\
+    rv = dedent(f"""\
+        <p>\
+        This field corresponds to a local unique identifier from <i>{record.get_name()}</i></a>.
+        </p>\
+        <h4>Provenance</h4>\
+        <p>\
+        The semantics of this field are derived from the
+        <a href="https://bioregistry.io/{record.prefix}"><code>{record.prefix}</code></a> entry in
+        the <a href="https://bioregistry.io">Bioregistry</a>: a registry of semantic web and linked
+        open data compact URI (CURIE) prefixes and URI prefixes.
+        </p>\
+    """).strip()
+    if description := record.get_description():
+        # this is de-indented the whole way because it's not
+        # known what indentation will be used in the description
+        rv += f"""\
 <h4>Description of Semantic Space</h4>\
-{record.get_description()}
-""".strip()
+{description}
+        """.strip()
+    return rv
