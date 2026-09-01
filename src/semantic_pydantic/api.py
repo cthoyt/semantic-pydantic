@@ -86,7 +86,7 @@ def _create(
         """
             )
         )
-    jse = kwargs.setdefault("json_schema_extra", {})
+    jse: dict[str, Any] = kwargs.setdefault("json_schema_extra", {})  # type:ignore[assignment]
     jse["bioregistry"] = {
         "prefix": record.prefix,
         "mappings": record.mappings,
@@ -100,6 +100,7 @@ def _create(
     if (pattern := record.get_pattern()) and "pattern" not in kwargs:
         kwargs["pattern"] = pattern
 
+    # TODO update to examples?
     if (example := record.get_example()) and "example" not in kwargs:
         jse["example"] = example
 

@@ -1,6 +1,7 @@
 """Trivial version test."""
 
 import unittest
+from typing import Annotated
 
 import fastapi
 from pydantic import BaseModel, Field
@@ -15,15 +16,15 @@ CHARLIE_ORCID = "0000-0003-4423-4370"
 class Scholar(BaseModel):
     """A model representing a researcher, who might have several IDs on different services."""
 
-    orcid: str = SemanticField(..., prefix="orcid")
-    name: str = Field(..., example="Charles Tapley Hoyt")
-    github: str | None = SemanticField(default=None, prefix="github", example="cthoyt")
+    orcid: Annotated[str, SemanticField(prefix="orcid")]
+    name: str = Field(examples=["Charles Tapley Hoyt"])
+    github: Annotated[str | None, SemanticField(prefix="github", examples=["cthoyt"])] = None
 
 
 class TestAPI(unittest.TestCase):
     """Trivially test a version."""
 
-    def test_field(self):
+    def test_field(self) -> None:
         """Test fields."""
         person = Scholar(orcid=CHARLIE_ORCID, name="Charles Tapley Hoyt")
         self.assertIsNone(person.github)
@@ -31,12 +32,12 @@ class TestAPI(unittest.TestCase):
         with self.assertRaises(ValueError):
             Scholar(orcid=CHARLIE_ORCID + "XXX", name="Charles Tapley Hoyt")
 
-    def test_fastapi(self):
+    def test_fastapi(self) -> None:
         """Test API usage."""
         app = fastapi.FastAPI()
 
         @app.get("/{orcid}", response_model=Scholar)
-        def route(orcid: str = SemanticPath(prefix="orcid")):
+        def route(orcid: Annotated[str, SemanticPath(prefix="orcid")]) -> Scholar:
             """Return"""
             return Scholar(orcid=orcid, name="Test Name")
 
@@ -45,7 +46,7 @@ class TestAPI(unittest.TestCase):
         obj = Scholar(**res.json())
         self.assertEqual(obj.orcid, CHARLIE_ORCID)
 
-    def test_version_type(self):
+    def test_version_type(self) -> None:
         """Test the version is a string.
 
         This is only meant to be an example test.
