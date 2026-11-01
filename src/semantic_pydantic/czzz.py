@@ -15,7 +15,7 @@ class Prefix(str):
     """A Bioregistry prefix."""
 
     @classmethod
-    def _validate(cls, __input_value: str, _: core_schema.ValidationInfo) -> Prefix:
+    def _validate(cls, __input_value: str, /, _: core_schema.ValidationInfo) -> Prefix:
         resource = bioregistry.get_resource(__input_value)
         if resource is None:
             raise PydanticCustomError("bioregistry_prefix", "Invalid Bioregistry prefix")
@@ -33,14 +33,12 @@ class Prefix(str):
     @property
     def name(self) -> str:
         """Get the name for this prefix."""
-        _name = bioregistry.get_name(self)
-        if _name is None:
-            raise RuntimeError
-        return _name
+        return bioregistry.get_name(self, strict=True)
 
     @property
     def description(self) -> str:
         """Get the description for this prefix."""
+        # TODO add strict
         _description = bioregistry.get_description(self)
         if _description is None:
             raise RuntimeError
@@ -51,7 +49,7 @@ class CURIE(str):
     """A Bioregistry CURIE."""
 
     @classmethod
-    def _validate(cls, __input_value: str, _: core_schema.ValidationInfo) -> CURIE:
+    def _validate(cls, __input_value: str, /, _: core_schema.ValidationInfo) -> CURIE:
         prefix, _sep, identifier = __input_value.rpartition(":")
         resource = bioregistry.get_resource(prefix)
         if resource is None:
@@ -80,7 +78,9 @@ class Identifier(str):
     """A factory for identifier annotations."""
 
     @classmethod
-    def __get_pydantic_core_schema__(cls, source, handler) -> core_schema.CoreSchema:
+    def __get_pydantic_core_schema__(
+        cls, source: type[Any], handler: GetCoreSchemaHandler
+    ) -> core_schema.CoreSchema:
         if not handler.field_name:
             raise RuntimeError
         resource = bioregistry.get_resource(handler.field_name)
