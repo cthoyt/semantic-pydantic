@@ -11,11 +11,11 @@ from .api import (
 from .czzz import CURIE, Identifier, Prefix
 
 __all__ = [
-    "SemanticField",
-    "SemanticPath",
     "SemanticBody",
+    "SemanticField",
     "SemanticForm",
     "SemanticHeader",
+    "SemanticPath",
     "SemanticQuery",
     "CURIE",
     "Identifier",

@@ -8,11 +8,11 @@ from subprocess import CalledProcessError, check_output
 
 __all__ = [
     "VERSION",
-    "get_version",
     "get_git_hash",
+    "get_version",
 ]
 
-VERSION = "0.0.4-dev"
+VERSION = "0.1.1-dev"
 
 
 def get_git_hash() -> str:

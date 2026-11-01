@@ -1,7 +1,7 @@
 """Trivial version test."""
 
-import typing
 import unittest
+from typing import Annotated
 
 import fastapi
 from pydantic import BaseModel, Field
@@ -16,9 +16,9 @@ CHARLIE_ORCID = "0000-0003-4423-4370"
 class Scholar(BaseModel):
     """A model representing a researcher, who might have several IDs on different services."""
 
-    orcid: str = SemanticField(..., prefix="orcid")
-    name: str = Field(..., example="Charles Tapley Hoyt")
-    github: typing.Optional[str] = SemanticField(default=None, prefix="github", example="cthoyt")
+    orcid: Annotated[str, SemanticField(prefix="orcid")]
+    name: str = Field(examples=["Charles Tapley Hoyt"])
+    github: Annotated[str | None, SemanticField(prefix="github", examples=["cthoyt"])] = None
 
 
 class PrefixContainingModel(BaseModel):
@@ -42,7 +42,7 @@ class IdentifierContainingModel(BaseModel):
 class TestAPI(unittest.TestCase):
     """Trivially test a version."""
 
-    def test_field(self):
+    def test_field(self) -> None:
         """Test fields."""
         person = Scholar(orcid=CHARLIE_ORCID, name="Charles Tapley Hoyt")
         self.assertIsNone(person.github)
@@ -50,12 +50,12 @@ class TestAPI(unittest.TestCase):
         with self.assertRaises(ValueError):
             Scholar(orcid=CHARLIE_ORCID + "XXX", name="Charles Tapley Hoyt")
 
-    def test_fastapi(self):
+    def test_fastapi(self) -> None:
         """Test API usage."""
         app = fastapi.FastAPI()
 
         @app.get("/{orcid}", response_model=Scholar)
-        def route(orcid: str = SemanticPath(prefix="orcid")):
+        def route(orcid: Annotated[str, SemanticPath(prefix="orcid")]) -> Scholar:
             """Return"""
             return Scholar(orcid=orcid, name="Test Name")
 
