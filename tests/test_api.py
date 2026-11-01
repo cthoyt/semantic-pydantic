@@ -64,7 +64,7 @@ class TestAPI(unittest.TestCase):
         obj = Scholar(**res.json())
         self.assertEqual(obj.orcid, CHARLIE_ORCID)
 
-    def test_prefix(self):
+    def test_prefix(self) -> None:
         """Test a prefix field."""
         value = PrefixContainingModel(prefix="go")
         self.assertEqual("go", value.prefix)
@@ -75,7 +75,7 @@ class TestAPI(unittest.TestCase):
         with self.assertRaises(ValueError):
             PrefixContainingModel(prefix="nope")
 
-    def test_curie(self):
+    def test_curie(self) -> None:
         """Test a CURIE field."""
         value = CURIEContainingModel(curie="go:1234567")
         self.assertEqual("go:1234567", value.curie)
@@ -89,7 +89,7 @@ class TestAPI(unittest.TestCase):
         with self.assertRaises(ValueError):
             CURIEContainingModel(curie="nope:nope")
 
-    def test_identifier(self):
+    def test_identifier(self) -> None:
         """Test an identifier field."""
         value = IdentifierContainingModel(orcid=CHARLIE_ORCID)
         self.assertEqual(CHARLIE_ORCID, value.orcid)
@@ -97,7 +97,7 @@ class TestAPI(unittest.TestCase):
         with self.assertRaises(ValueError):
             IdentifierContainingModel(orcid=CHARLIE_ORCID + "X")
 
-    def test_version_type(self):
+    def test_version_type(self) -> None:
         """Test the version is a string.
 
         This is only meant to be an example test.
